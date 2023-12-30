@@ -84,11 +84,13 @@ export default function HomeScreen() {
 
         {/* Categories section */}
         <View>
-          <Categories
-            categories={categories}
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
-          />
+          {categories.length > 0 && (
+            <Categories
+              categories={categories}
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+            />
+          )}
         </View>
       </ScrollView>
     </View>
