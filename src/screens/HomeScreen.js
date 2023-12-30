@@ -1,15 +1,36 @@
 import { View, Text, ScrollView, Image, TextInput } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
+import axios from "axios";
 import Categories from "../components/categories";
 
 export default function HomeScreen() {
-  const [activeCategory, setActiveCategory] = useState('Beef');
+  const [activeCategory, setActiveCategory] = useState("Beef");
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  const getCategories = async () => {
+    try {
+      const response = await axios.get(
+        "https://themealdb.com/api/json/v1/1/categories.php"
+      );
+      // console.log("categories: ", response.data);
+      if (response && response.data) {
+        setCategories(response.data.categories);
+      }
+    } catch (err) {
+      console.log("error: ", err.message);
+    }
+  };
+
   return (
     <View className="flex-1 bg-white">
       <StatusBar style="dark" />
@@ -63,7 +84,11 @@ export default function HomeScreen() {
 
         {/* Categories section */}
         <View>
-          <Categories activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
+          <Categories
+            categories={categories}
+            activeCategory={activeCategory}
+            setActiveCategory={setActiveCategory}
+          />
         </View>
       </ScrollView>
     </View>
