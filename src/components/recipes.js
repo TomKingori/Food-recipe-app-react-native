@@ -5,21 +5,12 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import MasonryList from "@react-native-seoul/masonry-list";
-import Animated, { FadeInDown } from 'react-native-reanimated'
+import Animated, { FadeInDown } from "react-native-reanimated";
 import { mealData } from "../constants";
+import Loading from "./loading";
+import { CachedImage } from "../helpers/image";
 
-export default function Recipes({recipes}) {
-  const [showMasonryList, setShowMasonryList] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowMasonryList(true);
-    }, 750);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
-
+export default function Recipes({ categories, meals }) {
   return (
     <View className="mx-4 space-y-3">
       <Text
@@ -29,10 +20,12 @@ export default function Recipes({recipes}) {
         Recipes
       </Text>
       <View>
-        {showMasonryList && (
+        {categories.length == 0 || meals.length == 0 ? (
+          <Loading size="large" className="mt-20" />
+        ) : (
           <MasonryList
-            data={mealData}
-            keyExtractor={(item) => item.id}
+            data={meals}
+            keyExtractor={(item) => item.idMeal}
             numColumns={2}
             showsVerticalScrollIndicator={false}
             renderItem={({ item, i }) => <RecipeCard item={item} index={i} />}
@@ -50,7 +43,12 @@ export default function Recipes({recipes}) {
 const RecipeCard = ({ item, index }) => {
   let isEven = index % 2 == 0;
   return (
-    <Animated.View entering={FadeInDown.delay(index=100).duration(600).springify().damping(20)}>
+    <Animated.View
+      entering={FadeInDown.delay((index = 100))
+        .duration(600)
+        .springify()
+        .damping(20)}
+    >
       <Pressable
         style={{
           width: "100%",
@@ -59,17 +57,31 @@ const RecipeCard = ({ item, index }) => {
         }}
         className="flex justify-center mb-4 space-y-1"
       >
-        <Image
-          source={{ uri: item.image }}
+        {/* <Image
+          source={{ uri: item.strMealThumb }}
           style={{
             width: "100%",
             height: index % 3 == 0 ? hp(25) : hp(35),
             borderRadius: 35,
           }}
           className="bg-black/5"
-        />
-        <Text style={{fontSize: hp(1.5)}} className="font-semibold ml-2 text-neutral-600">
-          {item.name.length > 20 ? item.name.slice(0, 20) + "..." : item.name}
+        /> */}
+        <CachedImage
+        uri= {item.strMealThumb }
+          style={{
+            width: "100%",
+            height: index % 3 == 0 ? hp(25) : hp(35),
+            borderRadius: 35,
+          }}
+          className="bg-black/5"
+         />
+        <Text
+          style={{ fontSize: hp(1.5) }}
+          className="font-semibold ml-2 text-neutral-600"
+        >
+          {item.strMeal.length > 20
+            ? item.strMeal.slice(0, 20) + "..."
+            : item.strMeal}
         </Text>
       </Pressable>
     </Animated.View>

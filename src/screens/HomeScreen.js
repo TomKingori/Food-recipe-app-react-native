@@ -13,34 +13,41 @@ import Recipes from "../components/recipes";
 export default function HomeScreen() {
   const [activeCategory, setActiveCategory] = useState("Beef");
   const [categories, setCategories] = useState([]);
-  const [recipes, setRecipes] = useState([]);
+  const [meals, setMeals] = useState([]);
 
   useEffect(() => {
     getCategories();
+    getRecipes();
   }, []);
+
+  const handleCategoryChange = category =>{
+    getRecipes(category)
+    setActiveCategory(category)
+    setMeals([])
+  }
 
   const getCategories = async () => {
     try {
       const response = await axios.get(
         "https://themealdb.com/api/json/v1/1/categories.php"
       );
-      // console.log("recipes: ", response.data);
+      // console.log("recipes: ", response.data.categories);
       if (response && response.data) {
-        setRecipes(response.data.meals);
+        setCategories(response.data.categories);
       }
     } catch (err) {
       console.log("error: ", err.message);
     }
   };
 
-  const getRecipes = async (category="Beef") => {
+  const getRecipes = async (category = "Beef") => {
     try {
       const response = await axios.get(
         `https://themealdb.com/api/json/v1/1/filter.php?c=${category}`
       );
       // console.log("categories: ", response.data);
       if (response && response.data) {
-        setCategories(response.data.categories);
+        setMeals(response.data.meals);
       }
     } catch (err) {
       console.log("error: ", err.message);
@@ -104,14 +111,14 @@ export default function HomeScreen() {
             <Categories
               categories={categories}
               activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
+              handleCategoryChange={handleCategoryChange}
             />
           )}
         </View>
 
         {/* Recipes */}
         <View>
-          <Recipes recipes={recipes} />
+          <Recipes categories={categories} meals={meals} />
         </View>
       </ScrollView>
     </View>
