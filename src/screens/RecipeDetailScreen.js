@@ -12,7 +12,13 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { ChevronLeftIcon } from "react-native-heroicons/outline";
+import {
+  ChevronLeftIcon,
+  ClockIcon,
+  FireIcon,
+  Square3Stack3DIcon,
+  UsersIcon,
+} from "react-native-heroicons/outline";
 import { HeartIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -24,7 +30,7 @@ export default function RecipeDetailScreen(props) {
   const [isfavourite, setIsFavourite] = useState(false);
   const navigation = useNavigation();
   const [meal, setMeal] = useState(null);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getMealData(item.idMeal);
@@ -35,10 +41,10 @@ export default function RecipeDetailScreen(props) {
       const response = await axios.get(
         `https://themealdb.com/api/json/v1/1/lookup.php?i=${id}`
       );
-      console.log("meal: ", response.data);
+      // console.log("meal: ", response.data);
       if (response && response.data) {
         setMeal(response.data.meals[0]);
-        setLoading(false)
+        setLoading(false);
       }
     } catch (err) {
       console.log("error: ", err.message);
@@ -95,24 +101,125 @@ export default function RecipeDetailScreen(props) {
         </TouchableOpacity>
       </View>
 
-    {/* Recipe description */}
-      {
-        loading?(
-            <Loading size="large" className="mt-16" />
-        ):(
-            <View className="px-4 flex justify-between space-y-4 pt-4">
-                {/* Name and area */}
-                <View className="space-y-2">
-                    <Text style={{fontSize: hp(3)}} className="font-bold flex-1 text-neutral-700">
-                        {meal?.strMeal}
-                    </Text>
-                    <Text style={{fontSize: hp(2)}} className="font-medium flex-1 text-neutral-500">
-                        {meal?.strArea}
-                    </Text>
-                </View>
+      {/* Recipe description */}
+      {loading ? (
+        <Loading size="large" className="mt-16" />
+      ) : (
+        <View className="px-4 flex justify-between space-y-4 pt-4">
+          {/* Name and area */}
+          <View className="space-y-2">
+            <Text
+              style={{ fontSize: hp(3) }}
+              className="font-bold flex-1 text-neutral-700"
+            >
+              {meal?.strMeal}
+            </Text>
+            <Text
+              style={{ fontSize: hp(2) }}
+              className="font-medium flex-1 text-neutral-500"
+            >
+              {meal?.strArea}
+            </Text>
+          </View>
+
+          {/* Misc */}
+          <View className="flex-row justify-around">
+            <View className="flex rounded-full bg-amber-300 p-2">
+              <View
+                style={{ height: hp(6.5), width: hp(6.5) }}
+                className="bg-white rounded-full flex items-center justify-center"
+              >
+                <ClockIcon size={hp(4)} strokeWidth={2.5} color="#525252" />
+              </View>
+              <View className="flex items-center py-2 space-y-1">
+                <Text
+                  style={{ fontSize: hp(2) }}
+                  className="font-bold text-neutral-700"
+                >
+                  35
+                </Text>
+                <Text
+                  style={{ fontSize: hp(1.3) }}
+                  className="font-bold text-neutral-700"
+                >
+                  Mins
+                </Text>
+              </View>
             </View>
-        )
-      }
+
+            <View className="flex rounded-full bg-amber-300 p-2">
+              <View
+                style={{ height: hp(6.5), width: hp(6.5) }}
+                className="bg-white rounded-full flex items-center justify-center"
+              >
+                <UsersIcon size={hp(4)} strokeWidth={2.5} color="#525252" />
+              </View>
+              <View className="flex items-center py-2 space-y-1">
+                <Text
+                  style={{ fontSize: hp(2) }}
+                  className="font-bold text-neutral-700"
+                >
+                  03
+                </Text>
+                <Text
+                  style={{ fontSize: hp(1.3) }}
+                  className="font-bold text-neutral-700"
+                >
+                  Servings
+                </Text>
+              </View>
+            </View>
+
+            <View className="flex rounded-full bg-amber-300 p-2">
+              <View
+                style={{ height: hp(6.5), width: hp(6.5) }}
+                className="bg-white rounded-full flex items-center justify-center"
+              >
+                <FireIcon size={hp(4)} strokeWidth={2.5} color="#525252" />
+              </View>
+              <View className="flex items-center py-2 space-y-1">
+                <Text
+                  style={{ fontSize: hp(2) }}
+                  className="font-bold text-neutral-700"
+                >
+                  103
+                </Text>
+                <Text
+                  style={{ fontSize: hp(1.3) }}
+                  className="font-bold text-neutral-700"
+                >
+                  Calories
+                </Text>
+              </View>
+            </View>
+
+            <View className="flex rounded-full bg-amber-300 p-2">
+              <View
+                style={{ height: hp(6.5), width: hp(6.5) }}
+                className="bg-white rounded-full flex items-center justify-center"
+              >
+                <Square3Stack3DIcon
+                  size={hp(4)}
+                  strokeWidth={2.5}
+                  color="#525252"
+                />
+              </View>
+              <View className="flex items-center py-2 space-y-1">
+                <Text
+                  style={{ fontSize: hp(2) }}
+                  className="font-bold text-neutral-700"
+                ></Text>
+                <Text
+                  style={{ fontSize: hp(1.3) }}
+                  className="font-bold text-neutral-700"
+                >
+                  Easy
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      )}
     </ScrollView>
   );
 }
