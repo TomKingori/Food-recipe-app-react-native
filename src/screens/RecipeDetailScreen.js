@@ -24,6 +24,7 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Loading from "../components/loading";
+import YoutubeIframe from "react-native-youtube-iframe";
 
 export default function RecipeDetailScreen(props) {
   let item = props.route.params;
@@ -49,6 +50,27 @@ export default function RecipeDetailScreen(props) {
     } catch (err) {
       console.log("error: ", err.message);
     }
+  };
+
+  const ingredientsIndexes = (meal) => {
+    if (!meal) return [];
+    let indexes = [];
+    for (let i = 1; i <= 20; i++) {
+      if (meal["strIngredient" + i]) {
+        indexes.push(i);
+      }
+    }
+
+    return indexes;
+  };
+
+  const getYoutubeVideoId = (url) => {
+    const regex = /[?&]v=([^&]+)/;
+    const match = url.match(regex);
+    if (match && match[1]) {
+      return match[1];
+    }
+    return null;
   };
 
   return (
@@ -218,6 +240,74 @@ export default function RecipeDetailScreen(props) {
               </View>
             </View>
           </View>
+
+          {/* Ingredients */}
+          <View className="space-y-4">
+            <Text
+              style={{ fontSize: hp(2.5) }}
+              className="font-bold flex-1 text-neutral-700"
+            >
+              Ingredients
+            </Text>
+          </View>
+          <View className="space-y-2 ml-3">
+            {ingredientsIndexes(meal).map((i) => {
+              return (
+                <View key={i} className="flex-row space-x-4">
+                  <View
+                    style={{ height: hp(1.5), width: hp(1.5) }}
+                    className="bg-amber-300 rounded-full"
+                  />
+                  <View className="flex-row space-x-2">
+                    <Text
+                      style={{ fontSize: hp(1.7) }}
+                      className="font-extrabold text-neutral-700"
+                    >
+                      {meal["strMeasure" + i]}
+                    </Text>
+                    <Text
+                      style={{ fontSize: hp(1.7) }}
+                      className="font-medium text-neutral-600"
+                    >
+                      {meal["strIngredient" + i]}
+                    </Text>
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+
+          {/* Instructions */}
+          <View className="space-y-4">
+            <Text
+              style={{ fontSize: hp(2.5) }}
+              className="font-bold flex-1 text-neutral-700"
+            >
+              Instructions
+            </Text>
+          </View>
+          <Text style={{ fontSize: hp(1.6) }} className="text-neutral-700">
+            {meal?.strInstructions}
+          </Text>
+
+          {/* Recipe Video */}
+          {meal.strYoutube && (
+            <View className="space-y-4">
+              <Text
+                style={{ fontSize: hp(2.5) }}
+                className="font-bold flex-1 text-neutral-700"
+              >
+                Recipe Video
+              </Text>
+
+              <View>
+                <YoutubeIframe
+                  videoId={getYoutubeVideoId(meal.strYoutube)}
+                  height={hp(30)}
+                />
+              </View>
+            </View>
+          )}
         </View>
       )}
     </ScrollView>
