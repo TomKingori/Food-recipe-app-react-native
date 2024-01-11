@@ -94,6 +94,7 @@ export default function RecipeDetailScreen(props) {
             marginTop: 4,
             overlayColor: "rgba(0,0,0,0.5)",
           }}
+          sharedTransitionTag={item.strMeal}
         />
         <View
           style={{
