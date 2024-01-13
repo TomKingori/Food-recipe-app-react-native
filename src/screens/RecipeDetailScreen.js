@@ -25,6 +25,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import Loading from "../components/loading";
 import YoutubeIframe from "react-native-youtube-iframe";
+import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 
 export default function RecipeDetailScreen(props) {
   let item = props.route.params;
@@ -105,7 +106,10 @@ export default function RecipeDetailScreen(props) {
       </View>
 
       {/* Back Button */}
-      <View className="w-full absolute flex-row justify-between items-center pt-14">
+      <Animated.View
+        entering={FadeIn.delay(200).duration(1000)}
+        className="w-full absolute flex-row justify-between items-center pt-14"
+      >
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           className="p-2 rounded-full ml-5 bg-white"
@@ -122,7 +126,7 @@ export default function RecipeDetailScreen(props) {
             color={isfavourite ? "red" : "gray"}
           />
         </TouchableOpacity>
-      </View>
+      </Animated.View>
 
       {/* Recipe description */}
       {loading ? (
@@ -130,7 +134,10 @@ export default function RecipeDetailScreen(props) {
       ) : (
         <View className="px-4 flex justify-between space-y-4 pt-4">
           {/* Name and area */}
-          <View className="space-y-2">
+          <Animated.View
+            entering={FadeInDown.duration(700).springify().damping(12)}
+            className="space-y-2"
+          >
             <Text
               style={{ fontSize: hp(3) }}
               className="font-bold flex-1 text-neutral-700"
@@ -143,10 +150,16 @@ export default function RecipeDetailScreen(props) {
             >
               {meal?.strArea}
             </Text>
-          </View>
+          </Animated.View>
 
           {/* Misc */}
-          <View className="flex-row justify-around">
+          <Animated.View
+            entering={FadeInDown.delay(100)
+              .duration(700)
+              .springify()
+              .damping(12)}
+            className="flex-row justify-around"
+          >
             <View className="flex rounded-full bg-amber-300 p-2">
               <View
                 style={{ height: hp(6.5), width: hp(6.5) }}
@@ -240,60 +253,78 @@ export default function RecipeDetailScreen(props) {
                 </Text>
               </View>
             </View>
-          </View>
+          </Animated.View>
 
           {/* Ingredients */}
-          <View className="space-y-4">
+          <Animated.View
+            entering={FadeInDown.delay(200)
+              .duration(700)
+              .springify()
+              .damping(12)}
+            className="space-y-4"
+          >
             <Text
               style={{ fontSize: hp(2.5) }}
               className="font-bold flex-1 text-neutral-700"
             >
               Ingredients
             </Text>
-          </View>
-          <View className="space-y-2 ml-3">
-            {ingredientsIndexes(meal).map((i) => {
-              return (
-                <View key={i} className="flex-row space-x-4">
-                  <View
-                    style={{ height: hp(1.5), width: hp(1.5) }}
-                    className="bg-amber-300 rounded-full"
-                  />
-                  <View className="flex-row space-x-2">
-                    <Text
-                      style={{ fontSize: hp(1.7) }}
-                      className="font-extrabold text-neutral-700"
-                    >
-                      {meal["strMeasure" + i]}
-                    </Text>
-                    <Text
-                      style={{ fontSize: hp(1.7) }}
-                      className="font-medium text-neutral-600"
-                    >
-                      {meal["strIngredient" + i]}
-                    </Text>
+            <View className="space-y-2 ml-3">
+              {ingredientsIndexes(meal).map((i) => {
+                return (
+                  <View key={i} className="flex-row space-x-4">
+                    <View
+                      style={{ height: hp(1.5), width: hp(1.5) }}
+                      className="bg-amber-300 rounded-full"
+                    />
+                    <View className="flex-row space-x-2">
+                      <Text
+                        style={{ fontSize: hp(1.7) }}
+                        className="font-extrabold text-neutral-700"
+                      >
+                        {meal["strMeasure" + i]}
+                      </Text>
+                      <Text
+                        style={{ fontSize: hp(1.7) }}
+                        className="font-medium text-neutral-600"
+                      >
+                        {meal["strIngredient" + i]}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              );
-            })}
-          </View>
+                );
+              })}
+            </View>
+          </Animated.View>
 
           {/* Instructions */}
-          <View className="space-y-4">
+          <Animated.View
+            entering={FadeInDown.delay(300)
+              .duration(700)
+              .springify()
+              .damping(12)}
+            className="space-y-4"
+          >
             <Text
               style={{ fontSize: hp(2.5) }}
               className="font-bold flex-1 text-neutral-700"
             >
               Instructions
             </Text>
-          </View>
-          <Text style={{ fontSize: hp(1.6) }} className="text-neutral-700">
-            {meal?.strInstructions}
-          </Text>
+            <Text style={{ fontSize: hp(1.6) }} className="text-neutral-700">
+              {meal?.strInstructions}
+            </Text>
+          </Animated.View>
 
           {/* Recipe Video */}
           {meal.strYoutube && (
-            <View className="space-y-4">
+            <Animated.View
+              entering={FadeInDown.delay(400)
+                .duration(700)
+                .springify()
+                .damping(12)}
+              className="space-y-4"
+            >
               <Text
                 style={{ fontSize: hp(2.5) }}
                 className="font-bold flex-1 text-neutral-700"
@@ -307,7 +338,7 @@ export default function RecipeDetailScreen(props) {
                   height={hp(30)}
                 />
               </View>
-            </View>
+            </Animated.View>
           )}
         </View>
       )}
